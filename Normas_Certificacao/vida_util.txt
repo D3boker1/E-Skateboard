@@ -1,0 +1,36 @@
+LED: 
+Tempo de vida: 50k >5 anos
+Fonte: Conhecimento comum das internetes
+
+IC: 
+MTBF (tempo médio antes de falha): >1E9
+Fonte: https://www.ti.com/quality/docs/estimator.tsp
+Cagativo segundo o utilizador save2600 do forum da Atari
+
+Condensador Eletrolitico:  
+Tempo de vida: 150k >10 anos
+Fonte: Replacing-Caps.pdf
+
+Condensador Filme: 
+Tempo de vida: >100k a 70°C >10 anos
+Fonte: _did-you-know.pdf
+
+Condensador Ceramico: 
+Tempo de vida: Bastante >10 anos
+Fonte: Os outros dois tipos de condensadores
+
+Rele:
+1.000.000 Operações mecanicas (minimo)
+100.000 Operações Eletricas a carga nominal (minimo) (com carga)
+Fonte: Datasheet Rele
+
+Potenciometro:
+1000 horas em carga a 0.5W 70°C
+200 Ciclos Rotação
+Fonte: Datasheet 3826
+
+Celulas Bateria:
+250/300 Ciclos Carga/Descarga
+Fonte: post do reddit
+Fonte: Datasheet da celula 
+

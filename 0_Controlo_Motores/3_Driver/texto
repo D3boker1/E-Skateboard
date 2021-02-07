@@ -1,0 +1,89 @@
+\par Numa segunda iteração, projetou-se um \textit{driver} que cumprisse as mesmas finalidades. O objetivo da implementação de um \textit{driver} próprio foi meramente por interesses académicos por forma a compreender o funcionamento base de um circuito deste género. 
+\par Uma situação a ter bastante em conta na hora de projetar um conversor CC-CC em ponte completa\cite{ponte_h} foi a escolha dos seus componentes já que estes teriam de suportar intensidades de corrente elevadas por causa do motor. Deste modo, e tendo em conta as entradas de controlo no \textit{driver}, optou-se pela configuração da ponte H com MOSFET já que este trabalha com tensão e não com corrente, como o caso dos transístores BJT. O uso dos BJT seria um problema tendo em conta que os sinais de controlo de entrada são saídas de AMPOP, ou seja, ter-se-ia uma limitação de corrente elevada. Escolheu-se o MOSFET IRF640\cite{IRF640}, uma vez que funciona com uma corrente contínua de 18 A a 25 ºC e a 11 A a 100 ºC. Revela-se, portanto, um componente adequado para o controlo dos motores escolhidos. Além das apelativas características de intensidade de corrente, o MOSFET IRF640\cite{IRF640} traz um díodo de "roda livre (\textit{free-wheeling}) e é indispensável quando a carga é indutiva, pois proporciona caminho para descarregar a energia armazenada no campo magnético da carga indutiva quando o transístor desliga. A não existência deste díodo pode provocar o aparecimento de um pico de tensão elevado aquando do desligar do transístor, levando à sua destruição."\cite{free_wheeling}. Pelos conhecimentos adquiridos na UC de Máquinas Elétricas pode afirmar-se que o motor é uma carga indutiva. Veja-se a Figura \ref{fig:IRF640}.
+
+ \begin{figure}[!htb]
+    \centering  
+    \includegraphics[width=0.5\textwidth]{Imagens/Chap_2/IRF640.PNG}
+    \caption{Componente IRF640\cite{IRF640}.}%
+    \label{fig:IRF640}%
+\end{figure} 
+
+Do \textit{datasheet} do IRF640\cite{IRF640} sabe-se ainda que $V_{G} = 25$ V para uma condução plena de corrente. Como a tensão dos sinais de controlo é no máximo 5 V torna-se necessário a amplificação deste sinal. Para o efeito usou-se um amplificador em configuração não inversora (Figura \ref{fig:amplificador_nao_inversor}) com um ganho de 5 conseguindo, assim, uma tensão de cerca de 24 V considerando as limitações do AMPOP.
+
+ \begin{figure}[!htb]
+    \centering  
+    \includegraphics[width=0.5\textwidth]{Imagens/Chap_2/amplificador_não_inversor.PNG}
+    \caption{AMPOP em configuração amplificador não-inversor.}%
+    \label{fig:amplificador_nao_inversor}%
+\end{figure} 
+
+Pelo conhecimento da fórmula do amplificador não-inversor:
+\begin{equation}
+    {V_{saida} = V_{ent}({ 1 + \dfrac{R_{1}}{R_{2}}) }}
+\end{equation}
+Para o caso extremo: $$ V_{ent} = 5\hspace{0.2cm} V$$ $$ V_{saida} = 25 \hspace{0.2cm}V$$
+Assim, tem-se que: $$ R_{2} = 4R_{1}$$
+Se $R_{1} = \SI{10 }{\hspace{0.2cm}\kohm} \Rightarrow R_{2} = \SI{40 }{\hspace{0.2cm}\kohm}$
+\\
+\par Indo de encontro ao método de controlo do \textit{driver} DRI0042 precisa-se de implementar uma lógica que permita colocar o motor em ponto morto. Recorda-se que o ponto morto era requisitado quando Dir1 = 1 e Dir2 = 1. Ou seja, quando $Dir1 = 1 \hspace{0.2cm}\wedge\hspace{0.2cm} Dir2 = 1 \Rightarrow PM = 1$. Eletronicamente, pode traduzir-se a condição matemática pelo circuito da Figura \ref{fig:PM} (a). A saída deste circuito deve ligar-se a dois relés, cada um deles ligado em série com o motor. Quando PM = 1, os relés atuam e cortam a alimentação ao motor, deixando-o em ponto morto. Veja-se a Figura \ref{fig:PM} (b). 
+
+
+  \begin{figure}[!htb]
+    \centering  
+    \subfloat[\centering]{{ \includegraphics[width=0.4\textwidth]{Imagens/Chap_2/and.PNG} }}%
+    \qquad
+    \subfloat[\centering]{{ \includegraphics[width=0.4\textwidth]{Imagens/Chap_2/reles.png} }}%
+    \caption{Lógica para o ponto morto do motor: (a) Porta AND; (b) Acionamento dos relés.}%
+    \label{fig:PM}%
+\end{figure}
+
+\par Deste modo, chegou-se ao circuito da Figura \ref{fig:driver_proprio}. Para a implementação do circuito necessita-se dos componentes da Tabela \ref{tab:lista_driver}.
+
+ \begin{table}[!htb]
+    \centering
+    \caption{Lista de componentes para PWM com TL494.}
+ \begin{tabular}{||c c c c||} 
+ \hline
+  & Quantidade & Componente & Valor \\ [0.5ex] 
+ \hline\hline
+ 1 & 5 & Resistência & \SI{10}{\hspace{0.2cm}\kohm}\\ 
+ \hline
+ 2 & 5 & Resistência & \SI{40}{\hspace{0.2cm}\kohm} \\
+ \hline
+ 3 & 6 & MOSFET & IRF640 \\
+ \hline
+ 4 & 2 & Relé & 5 V \\
+ \hline
+ 5 & 3 & IC & LM358 \\ 
+ \hline
+ 6 & 1 & IC & 7400 \\ 
+ \hline
+\end{tabular}
+
+    \label{tab:lista_driver}
+\end{table}
+
+ \begin{figure}[!htb]
+    \centering  
+    \includegraphics[width=1\textwidth]{Imagens/Chap_2/ponte_h_propria.PNG}
+    \caption{Circuito do \textit{driver} desenvolvido.}%
+    \label{fig:driver_proprio}%
+\end{figure} 
+\newpage
+\subsubsection{Simulação do circuito}
+
+\par Uma vez mais, foi utilizado o simulador \textit{Proteus}\cite{Proteus} para fazer as simulações na medida em que, além de se poder simular os motores de forma bastante fidedigna, permite ainda visualizar o sentido de rotação do motor, permitindo, deste modo, verificar o correto funcionamento da ponte H desenvolvida. Foram testadas as 4 situações possíveis Dir1 = 0 e Dir2 = 0, Dir1 = 0 e Dir2 = 1, Dir1 = 1 e Dir2 = 0 e Dir1 = 1 e Dir2 = 1 e podem ser vistos nas Figuras \ref{fig:driver_testes} (a), (b), (c) e (d), respetivamente.
+
+  \begin{figure}[!htb]
+    \centering  
+    \subfloat[\centering]{{ \includegraphics[width=0.4\textwidth]{Imagens/Chap_2/dir1_0_dir2_0.PNG} }}%
+    \qquad
+    \subfloat[\centering]{{ \includegraphics[width=0.4\textwidth]{Imagens/Chap_2/dir1_0_dir2_1.PNG} }}%
+    \qquad
+    \subfloat[\centering]{{ \includegraphics[width=0.4\textwidth]{Imagens/Chap_2/dir1_1_dir2_0.PNG} }}%
+    \qquad
+    \subfloat[\centering]{{ \includegraphics[width=0.4\textwidth]{Imagens/Chap_2/dir1_1_dir2_1.PNG} }}%
+    \caption{Teste do \textit{driver}: (a) Intenção de travar; (b) Intenção de andar para frente; (c) Intenção de andar para trás; (d) Ponto morto.}%
+    \label{fig:driver_testes}%
+\end{figure}
+
