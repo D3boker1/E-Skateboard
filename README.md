@@ -18,3 +18,4 @@ Nos extras contém algumas informações de circuitos que seriam interessantes d
 Neste repositório encontram-se ainda os ficheiros e imagens das simulações (feitas com o *software* TINA e Proteus) para que rapidamente se possa mudar apenas um dos módulos. Contém ainda vídeos a comprovar o funcionamento do sistema eletrónico e imagens do sistema mecânico completo.
 
 
+![Projeção 3D do E-Skateboard](/E-Skateboard.gif)
